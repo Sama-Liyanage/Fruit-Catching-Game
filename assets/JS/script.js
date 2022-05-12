@@ -3,6 +3,7 @@ var basket = document.querySelector(".basket");
 var fruits = document.querySelector(".fruits");
 var basketLeft = parseInt(window.getComputedStyle(basket).getPropertyValue("left"));
 var basketBottom = parseInt(window.getComputedStyle(basket).getPropertyValue("bottom"));
+var score=0;
 
 function moveBasketLeft(){
     if(basketLeft>0) {
@@ -28,9 +29,31 @@ function control(e){
 }
 
 function  generateFruits(){
+    var fruitBottom=470;
+    var fruitLeft=Math.floor(Math.random() * 620);
     var fruit=document.createElement('div');
     fruit.setAttribute("class","fruit");
     fruits.appendChild(fruit);
+    function fallDownFruit(){
+        if(fruitBottom< basketBottom + 50 && fruitBottom > basketBottom && fruitLeft > basketLeft - 30 && fruitLeft < basketLeft + 80){
+            fruits.removeChild(fruit);
+            clearInterval(fallInterval);
+            score++;
+        }
+        if (fruitBottom < basketBottom){
+            alert("Game over! Your Score is:" +score);
+            clearInterval(fallInterval);
+            clearTimeout(fruitTimeOut);
+            location.reload();
+        }
+        fruitBottom-=5;
+        fruit.style.bottom=fruitBottom + 'px';
+        fruit.style.left=fruitLeft + 'px';
+    }
+
+    var fallInterval = setInterval(fallDownFruit,20);
+    var fruitTimeOut = setTimeout(generateFruits,2000);
+
 }
 generateFruits();
 
